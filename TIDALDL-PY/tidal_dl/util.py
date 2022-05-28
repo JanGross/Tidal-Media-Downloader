@@ -271,39 +271,22 @@ def convertToM4a(filepath, codec):
 
 
 def setMetaData(track, album, filepath, contributors, lyrics):
-    print("Setting mutagen FLAC Tags")
-    print(f"For file {filepath}")
     audio = mutagen.flac.FLAC(filepath)
     if audio.tags is None:
         audio.add_tags()
-    print("Audio pprint")
-    print(audio.pprint())
     if track.album.title is not None:
-        print("ALBUM")
         audio.tags["ALBUM"] = track.album.title
-        print("ALBUMATIST")
         audio.tags["ALBUMARTIST"] = album.artist.name
-    print("TITLE")
     audio.tags["TITLE"] = track.title
-    print("ARTIST")
     audio.tags["ARTIST"] = list(map(lambda artist: artist.name, track.artists))
-    print("COPYRIGHT")
     audio.tags["COPYRIGHT"] = track.copyRight
-    print("COMPOSER")
     audio.tags["COMPOSER"] = __parseContributors__('Composer', contributors)
-    print("DATE")
     audio.tags["DATE"] = str(album.releaseDate)
-    print("DISCNUMBER")
     audio.tags["DISCNUMBER"] = str(track.volumeNumber)
-    print("DISCTOTAL")
     audio.tags["DISCTOTAL"] = str(album.numberOfVolumes)
-    print("TRACKNUMER")
     audio.tags["TRACKNUMBER"] = str(track.trackNumber)
-    print("TRACKTOTAL")
     audio.tags["TRACKTOTAL"] = str(album.numberOfTracks)
-    print("LYRICS")
     audio.tags["LYRICS"] = lyrics
-    print("ISRC")
     audio.tags["ISRC"] = track.isrc
     pic = mutagen.flac.Picture()
     pic.type = 3
@@ -311,9 +294,31 @@ def setMetaData(track, album, filepath, contributors, lyrics):
     pic.desc = "Front Cover"
     pic.data = API.getCoverData(album.cover, "1280", "1280")
     audio.add_picture(pic)
-    print("Saving tags")
     audio.save()
     return
+
+""" 
+    obj = aigpy.tag.TagTool(filepath)
+    obj.album = track.album.title
+    obj.title = track.title
+    if not aigpy.string.isNull(track.version):
+        obj.title += ' (' + track.version + ')'
+
+    obj.artist = list(map(lambda artist: artist.name, track.artists))  # __getArtists__(track.artists)
+    obj.copyright = track.copyRight
+    obj.tracknumber = track.trackNumber
+    obj.discnumber = track.volumeNumber
+    obj.composer = __parseContributors__('Composer', contributors)
+    obj.isrc = track.isrc
+
+    obj.albumartist = list(map(lambda artist: artist.name, album.artists))  # __getArtists__(album.artists)
+    obj.date = album.releaseDate
+    obj.totaldisc = album.numberOfVolumes
+    obj.lyrics = lyrics
+    if obj.totaldisc <= 1:
+        obj.totaltrack = album.numberOfTracks
+    coverpath = API.getCoverUrl(album.cover, "1280", "1280")
+    obj.save(coverpath) """
 
 
 def isNeedDownload(path, url):
