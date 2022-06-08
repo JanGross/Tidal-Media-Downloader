@@ -286,7 +286,8 @@ def setMetaData(track, album, filepath, contributors, lyrics):
     audio.tags["DISCTOTAL"] = str(album.numberOfVolumes)
     audio.tags["TRACKNUMBER"] = str(track.trackNumber)
     audio.tags["TRACKTOTAL"] = str(album.numberOfTracks)
-    audio.tags["LYRICS"] = lyrics
+    if lyrics is not None:
+        audio.tags["LYRICS"] = lyrics
     audio.tags["ISRC"] = track.isrc
     pic = mutagen.flac.Picture()
     pic.type = 3
