@@ -279,7 +279,7 @@ def setMetaData(track, album, filepath, contributors, lyrics):
         audio.tags["ALBUMARTIST"] = album.artist.name
     audio.tags["TITLE"] = track.title
     audio.tags["ARTIST"] = list(map(lambda artist: artist.name, track.artists))
-    audio.tags["COPYRIGHT"] = track.copyRight
+    audio.tags["COPYRIGHT"] = str(track.copyRight)
     audio.tags["COMPOSER"] = __parseContributors__('Composer', contributors)
     audio.tags["DATE"] = str(album.releaseDate)
     audio.tags["DISCNUMBER"] = str(track.volumeNumber)
